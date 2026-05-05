@@ -1,66 +1,40 @@
-"""
-models.py — Core data structures for llm-watchdog
-==================================================
-CallLog is the single record written to SQLite for every LLM call.
-Using stdlib dataclasses — no Pydantic, no SQLAlchemy.
-"""
+# src/llm_watchdog/storage/models.py
+from __future__ import annotations
 
+import uuid
 from dataclasses import dataclass, field
-from datetime import datetime
+from datetime import datetime, timezone
 from typing import Optional
 
 
 @dataclass
 class CallLog:
-    """
-    One row in the logs table. Represents a single LLM API call.
+    """Represents a single recorded LLM API call."""
 
-    Fields:
-        id:               Auto-assigned by SQLite (None before insert)
-        timestamp:        When the call was made (UTC)
-        provider:         'openai', 'anthropic', 'ollama', 'unknown'
-        model:            e.g. 'qwen2.5:0.5b', 'gpt-4o'
-        input_tokens:     From response.usage.prompt_tokens
-        output_tokens:    From response.usage.completion_tokens
-        total_tokens:     input + output
-        cost_usd:         Calculated from prices.json (0.0 for Ollama)
-        latency_ms:       Wall clock time in milliseconds
-        tag:              Optional label (e.g. 'summarize', 'search')
-        user_id:          Optional user identifier for budget tracking
-        session_id:       Optional session grouping
-        success:          False if the call raised an exception
-        error_msg:        Exception message if success=False, else None
-    """
+    provider: str                          # "openai" | "anthropic" | "unknown"
+    model: str                             # e.g. "qwen2.5:0.5b", "gpt-4o"
+    input_tokens: int                      # from response.usage only
+    output_tokens: int                     # from response.usage only
+    cost_usd: float                        # calculated from prices.json
+    latency_ms: float                      # wall-clock milliseconds
+    success: bool                          # False if an exception was raised
 
-    # Identity
-    id: Optional[int] = field(default=None)
-    timestamp: datetime = field(default_factory=datetime.utcnow)
-
-    # Provider info
-    provider: str = "unknown"
-    model: str = "unknown"
-
-    # Token usage (from response.usage — no tiktoken)
-    input_tokens: int = 0
-    output_tokens: int = 0
-    total_tokens: int = 0
-
-    # Cost (0.0 for Ollama)
-    cost_usd: float = 0.0
-
-    # Performance
-    latency_ms: float = 0.0
-
-    # Tagging
-    tag: str = "default"
-    user_id: str = "anonymous"
+    # Optional metadata
+    tag: Optional[str] = None
+    user_id: Optional[str] = None
     session_id: Optional[str] = None
-
-    # Status
-    success: bool = True
     error_msg: Optional[str] = None
 
-    def __post_init__(self) -> None:
-        """Auto-compute total_tokens if not provided."""
-        if self.total_tokens == 0 and (self.input_tokens or self.output_tokens):
-            self.total_tokens = self.input_tokens + self.output_tokens
+    # Auto-populated fields
+    id: str = field(default_factory=lambda: str(uuid.uuid4()))
+    timestamp: datetime = field(default_factory=lambda: datetime.now(timezone.utc))
+
+    # Convenience properties                                               
+
+    @property
+    def total_tokens(self) -> int:
+        return self.input_tokens + self.output_tokens
+
+    @property
+    def timestamp_iso(self) -> str:
+        return self.timestamp.isoformat()
