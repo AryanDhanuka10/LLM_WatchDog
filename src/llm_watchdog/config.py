@@ -1,140 +1,76 @@
+# src/llm_watchdog/config.py
+"""Global configuration for llm-watchdog.
+
+Usage::
+
+    from llm_watchdog.config import config, configure, reset_config
+
+    configure(default_tag="my-app", silent=True)
+    print(config.default_tag)   # "my-app"
+    reset_config()
+    print(config.default_tag)   # "default"
+
+The ``config`` object is a module-level singleton.
+``configure()`` mutates it in-place; ``reset_config()`` restores defaults.
 """
-config.py — Central configuration for llm-watchdog
-====================================================
-Single source of truth for all runtime settings.
+from __future__ import annotations
 
-Priority order (highest → lowest):
-    1. Environment variables  (WATCHDOG_*)
-    2. Values set via configure() in user code
-    3. Defaults defined here
-
-Why this file exists:
-    Without config.py, settings like DB path, default tags, and
-    pricing overrides get hardcoded in 5 different files. When a
-    user wants to change the DB path, they'd have no obvious place
-    to look. config.py is that obvious place.
-
-Usage:
-    from llm_watchdog.config import config
-
-    # Read a setting
-    db_path = config.db_path
-
-    # Override at runtime (e.g. in tests)
-    from llm_watchdog.config import configure
-    configure(db_path=":memory:", default_tag="test")
-"""
-
-import os
-from dataclasses import dataclass, field
+from dataclasses import dataclass, field, asdict
 from pathlib import Path
+from typing import Any, Optional
 
+
+# Config dataclass                                                     
 
 @dataclass
 class WatchdogConfig:
-    """All runtime configuration in one place."""
+    """All tunable settings for llm-watchdog.
 
-    # ── Storage ──────────────────────────────────────────────────────
-    db_path: str = field(
-        default_factory=lambda: os.environ.get(
-            "WATCHDOG_DB_PATH",
-            str(Path.home() / ".llm-watchdog" / "logs.db")
-        )
-    )
-    # Why: Users may want to change DB location (CI, Docker, multi-project)
-    # Env var lets them do it without touching code.
-
-    # ── Pricing ──────────────────────────────────────────────────────
-    prices_path: str = field(
-        default_factory=lambda: os.environ.get(
-            "WATCHDOG_PRICES_PATH",
-            ""   # empty = use bundled prices.json
-        )
-    )
-    # Why: Power users may maintain their own pricing file with
-    # enterprise/custom model costs. This lets them plug it in.
-
-    # ── Default Tags ─────────────────────────────────────────────────
-    default_tag: str = field(
-        default_factory=lambda: os.environ.get(
-            "WATCHDOG_DEFAULT_TAG",
-            "default"
-        )
-    )
-    # Why: In a large app, every call should have a tag.
-    # If user forgets, this prevents NULL tag chaos in the DB.
-
-    # ── Budget ───────────────────────────────────────────────────────
-    global_budget_usd: float = field(
-        default_factory=lambda: float(
-            os.environ.get("WATCHDOG_GLOBAL_BUDGET_USD", "0")
-        )
-    )
-    # Why: 0 means no global budget. Positive value = hard global cap.
-    # Useful for CI environments where you want a safety net.
-
-    # ── Retry ────────────────────────────────────────────────────────
-    default_retry_count: int = field(
-        default_factory=lambda: int(
-            os.environ.get("WATCHDOG_RETRY_COUNT", "0")
-        )
-    )
-    default_retry_backoff: str = field(
-        default_factory=lambda: os.environ.get(
-            "WATCHDOG_RETRY_BACKOFF",
-            "exponential"   # or "linear"
-        )
-    )
-
-    # ── Logging ──────────────────────────────────────────────────────
-    silent: bool = field(
-        default_factory=lambda: os.environ.get(
-            "WATCHDOG_SILENT", "false"
-        ).lower() == "true"
-    )
-    # Why: In production apps, you may not want any stdout output.
-    # silent=True suppresses all watchdog prints.
+    Attributes:
+        default_tag:   Tag applied to calls that don't specify one.
+        silent:        If True, suppress all console warnings from the library.
+        db_path:       Path to the SQLite log file.
+                       Defaults to ``~/.llm-watchdog/logs.db``.
+    """
+    default_tag: str            = "default"
+    silent: bool                = False
+    db_path: Optional[Path]     = None      # None → use DEFAULT_DB_PATH at runtime
 
 
-# ── Singleton ────────────────────────────────────────────────────────
-# One global config instance used across the entire package.
-# Import this, don't instantiate WatchdogConfig yourself.
+# Module-level singleton + helpers                                     
+
+# The live config object — import this directly
 config = WatchdogConfig()
 
+# Snapshot of factory defaults for reset_config()
+_DEFAULTS: dict[str, Any] = asdict(WatchdogConfig())
 
-def configure(**kwargs) -> None:
+
+def configure(**kwargs: Any) -> None:
+    """Override one or more config keys.
+
+    Args:
+        **kwargs: Any field name from ``WatchdogConfig``.
+
+    Raises:
+        ValueError: If an unknown key is passed.
+
+    Example::
+
+        configure(default_tag="search-feature", silent=True)
     """
-    Override config values at runtime.
-
-    Example:
-        from llm_watchdog.config import configure
-        configure(db_path=":memory:", default_tag="pytest")
-
-    Useful for:
-        - Tests (use in-memory DB, never touch ~/.llm-watchdog/)
-        - Multi-tenant apps (switch DB per request)
-        - CI/CD (set silent=True, global_budget_usd=0.10)
-    """
+    valid_keys = set(_DEFAULTS.keys())
+    unknown = set(kwargs) - valid_keys
+    if unknown:
+        raise ValueError(
+            f"Unknown config key(s): {sorted(unknown)}. "
+            f"Valid keys: {sorted(valid_keys)}"
+        )
     for key, value in kwargs.items():
-        if not hasattr(config, key):
-            raise ValueError(
-                f"Unknown config key: '{key}'. "
-                f"Valid keys: {list(config.__dataclass_fields__.keys())}"
-            )
         setattr(config, key, value)
 
 
 def reset_config() -> None:
-    """
-    Reset all config to defaults.
-    Call this in test teardown to avoid state leakage between tests.
-
-    Example (conftest.py):
-        @pytest.fixture(autouse=True)
-        def clean_config():
-            yield
-            reset_config()
-    """
-    new = WatchdogConfig()
-    for key in config.__dataclass_fields__:
-        setattr(config, key, getattr(new, key))
+    """Restore all config values to their factory defaults."""
+    for key, value in _DEFAULTS.items():
+        setattr(config, key, value)

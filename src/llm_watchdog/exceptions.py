@@ -1,55 +1,75 @@
-"""
-exceptions.py — All custom exceptions for llm-watchdog
-"""
+# src/llm_watchdog/exceptions.py
+"""All llm-watchdog exceptions in one place."""
+from __future__ import annotations
+
+from typing import Optional
 
 
 class WatchdogError(Exception):
-    """Base exception for all llm-watchdog errors."""
+    """Base class for all llm-watchdog exceptions."""
 
 
 class BudgetExceeded(WatchdogError):
-    """
-    Raised when a Budget context manager's spending limit is crossed.
+    """Raised when accumulated spend crosses the configured limit.
 
     Attributes:
-        spent:   How much was spent (USD) at time of exception
-        limit:   The configured budget limit (USD)
-        user_id: The user/session that exceeded the budget
+        spent:   Total USD spent so far in the Budget window.
+        limit:   The max_usd threshold that was crossed.
+        user_id: The user identifier associated with this budget (may be None).
+
+    Example::
+
+        try:
+            with Budget(max_usd=0.10, user_id="alice"):
+                call_llm()
+        except BudgetExceeded as e:
+            print(f"{e.user_id} spent ${e.spent:.4f} (limit ${e.limit:.4f})")
     """
 
-    def __init__(self, spent: float, limit: float, user_id: str = "global") -> None:
-        self.spent = spent
-        self.limit = limit
+    def __init__(
+        self,
+        spent: float,
+        limit: float,
+        user_id: Optional[str] = None,
+    ) -> None:
+        self.spent   = spent
+        self.limit   = limit
         self.user_id = user_id
+
+        who = f"user '{user_id}'" if user_id else "session"
         super().__init__(
-            f"Budget exceeded for '{user_id}': "
+            f"Budget exceeded for {who}: "
             f"spent ${spent:.6f}, limit ${limit:.6f}"
         )
 
 
 class ProviderNotDetected(WatchdogError):
-    """
-    Raised when watchdog cannot identify the LLM provider
-    from the response object.
+    """Raised when no provider can be matched to an API response object.
+
+    The watchdog decorator logs these as ``provider='unknown'`` rather
+    than raising — this exception is available for stricter usage if
+    callers opt in.
     """
 
-    def __init__(self, response_type: str) -> None:
+    def __init__(self, response_type: str = "unknown") -> None:
         self.response_type = response_type
         super().__init__(
-            f"Cannot detect provider from response type: '{response_type}'. "
-            f"Supported: OpenAI ChatCompletion, Anthropic Message."
+            f"Could not detect LLM provider from response of type '{response_type}'. "
+            f"Supported providers: openai (and Ollama), anthropic."
         )
 
 
 class PricingModelNotFound(WatchdogError):
-    """
-    Raised when a model name has no entry in prices.json.
-    Cost will be logged as 0.0 with a warning instead of crashing.
+    """Raised when a model is not present in prices.json.
+
+    The pricing table returns 0.0 cost for unknown models rather than
+    raising — this exception is available for stricter usage.
     """
 
     def __init__(self, model: str) -> None:
         self.model = model
         super().__init__(
-            f"No pricing data for model '{model}'. "
-            f"Cost logged as $0.00. Add it to prices.json to track cost."
+            f"Model '{model}' not found in the pricing table. "
+            f"Cost will be reported as $0.00. "
+            f"Add it to prices.json or call pricing.table.reload() after editing."
         )
