@@ -188,10 +188,35 @@ def _resolve_path(db_path: Optional[Path]) -> Path:
     return Path(db_path) if db_path is not None else DEFAULT_DB_PATH
 
 
+def _parse_timestamp(value) -> datetime:
+    """Parse a timestamp that may arrive as str, datetime, or float/int.
+
+    Three cases seen in the wild:
+      - datetime object  : Python 3.10 sqlite3 auto-conversion
+      - ISO string       : Normal path written by insert_log()
+      - float/int        : Unix epoch, written by an older schema version
+    """
+    if isinstance(value, datetime):
+        return value
+    if isinstance(value, (int, float)):
+        return datetime.fromtimestamp(float(value), tz=timezone.utc)
+    s = str(value).strip()
+    # Try ISO first; fall back to epoch if it looks numeric
+    try:
+        return datetime.fromisoformat(s)
+    except ValueError:
+        try:
+            return datetime.fromtimestamp(float(s), tz=timezone.utc)
+        except (ValueError, OSError) as exc:
+            raise ValueError(
+                f"Cannot parse timestamp {value!r}: not ISO format or Unix epoch"
+            ) from exc
+
+
 def _row_to_calllog(row: sqlite3.Row) -> CallLog:
     return CallLog(
         id            = row["id"],
-        timestamp     = datetime.fromisoformat(row["timestamp"]),
+        timestamp     = _parse_timestamp(row["timestamp"]),
         provider      = row["provider"],
         model         = row["model"],
         input_tokens  = row["input_tokens"],
