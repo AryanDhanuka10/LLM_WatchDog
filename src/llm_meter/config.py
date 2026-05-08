@@ -1,5 +1,5 @@
 # src/llm_meter/config.py
-"""Global configuration for llm-watchdog.
+"""Global configuration for llm-meter.
 
 Usage::
 
@@ -24,13 +24,13 @@ from typing import Any, Optional
 
 @dataclass
 class WatchdogConfig:
-    """All tunable settings for llm-watchdog.
+    """All tunable settings for llm-meter.
 
     Attributes:
         default_tag:   Tag applied to calls that don't specify one.
         silent:        If True, suppress all console warnings from the library.
         db_path:       Path to the SQLite log file.
-                       Defaults to ``~/.llm-watchdog/logs.db``.
+                       Defaults to ``~/.llm-meter/logs.db``.
     """
     default_tag: str            = "default"
     silent: bool                = False

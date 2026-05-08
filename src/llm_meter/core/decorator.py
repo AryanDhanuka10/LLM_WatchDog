@@ -52,7 +52,7 @@ def watchdog(
         tag:        Arbitrary label for grouping calls in the CLI.
         user_id:    Per-user identifier (used by Budget enforcement).
         session_id: Optional session grouping label.
-        db_path:    Override the default ``~/.llm-watchdog/logs.db`` path.
+        db_path:    Override the default ``~/.llm-meter/logs.db`` path.
                     Primarily useful in tests.
     """
     def decorator(func: F) -> F:

@@ -1,11 +1,11 @@
 """
-template.py — llm-watchdog Project Scaffolder
+template.py — llm-meter Project Scaffolder
 ==============================================
 Run this ONCE before Day 1 to create the entire project structure.
 
 Usage:
     python template.py
-    python template.py --path /custom/path/llm-watchdog
+    python template.py --path /custom/path/llm-meter
 
 What it creates:
     - Full folder structure (src layout)
@@ -18,7 +18,7 @@ What it creates:
     - README.md stub
 
 After running:
-    cd llm-watchdog
+    cd llm-meter
     pip install -r requirements.txt
     pip install -e .          ← installs package in editable mode
     pytest tests/ -v          ← should collect 0 tests (placeholders only)
@@ -57,7 +57,7 @@ def make_pyproject(root: Path) -> None:
         build-backend = "hatchling.build"
 
         [project]
-        name = "llm-watchdog"
+        name = "llm-meter"
         version = "0.1.0"
         description = "Zero-config LLM call interceptor: cost, latency, budget enforcement"
         readme = "README.md"
@@ -85,8 +85,8 @@ def make_pyproject(root: Path) -> None:
         watchdog = "llm_meter.cli.__main__:cli"
 
         [project.urls]
-        Repository = "https://github.com/yourname/llm-watchdog"
-        "Bug Tracker" = "https://github.com/yourname/llm-watchdog/issues"
+        Repository = "https://github.com/yourname/llm-meter"
+        "Bug Tracker" = "https://github.com/yourname/llm-meter/issues"
 
         [tool.hatch.build.targets.wheel]
         packages = ["src/llm_meter"]
@@ -159,7 +159,7 @@ def make_changelog(root: Path) -> None:
     write(root / "CHANGELOG.md", """
         # Changelog
 
-        All notable changes to `llm-watchdog` will be documented here.
+        All notable changes to `llm-meter` will be documented here.
         Format: [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
         Versioning: [Semantic Versioning](https://semver.org/)
 
@@ -180,7 +180,7 @@ def make_changelog(root: Path) -> None:
 
 def make_readme(root: Path) -> None:
     write(root / "README.md", """
-        # llm-watchdog
+        # llm-meter
 
         > Zero-config LLM call interceptor. Track cost, latency, and token usage locally.
         > No cloud. No API key required. Works with Ollama (free), OpenAI, and Anthropic.
@@ -188,7 +188,7 @@ def make_readme(root: Path) -> None:
         ## Install
 
         ```bash
-        pip install llm-watchdog
+        pip install llm-meter
         ```
 
         ## Quickstart (Free with Ollama)
@@ -261,7 +261,7 @@ def make_prices_json(root: Path) -> None:
 def make_config(root: Path) -> None:
     write(root / "src" / "llm_meter" / "config.py", """
         \"\"\"
-        config.py — Central configuration for llm-watchdog
+        config.py — Central configuration for llm-meter
         ====================================================
         Single source of truth for all runtime settings.
 
@@ -300,7 +300,7 @@ def make_config(root: Path) -> None:
             db_path: str = field(
                 default_factory=lambda: os.environ.get(
                     "WATCHDOG_DB_PATH",
-                    str(Path.home() / ".llm-watchdog" / "logs.db")
+                    str(Path.home() / ".llm-meter" / "logs.db")
                 )
             )
             # Why: Users may want to change DB location (CI, Docker, multi-project)
@@ -373,7 +373,7 @@ def make_config(root: Path) -> None:
                 configure(db_path=":memory:", default_tag="pytest")
 
             Useful for:
-                - Tests (use in-memory DB, never touch ~/.llm-watchdog/)
+                - Tests (use in-memory DB, never touch ~/.llm-meter/)
                 - Multi-tenant apps (switch DB per request)
                 - CI/CD (set silent=True, global_budget_usd=0.10)
             \"\"\"
@@ -406,12 +406,12 @@ def make_config(root: Path) -> None:
 def make_exceptions(root: Path) -> None:
     write(root / "src" / "llm_meter" / "exceptions.py", """
         \"\"\"
-        exceptions.py — All custom exceptions for llm-watchdog
+        exceptions.py — All custom exceptions for llm-meter
         \"\"\"
 
 
         class WatchdogError(Exception):
-            \"\"\"Base exception for all llm-watchdog errors.\"\"\"
+            \"\"\"Base exception for all llm-meter errors.\"\"\"
 
 
         class BudgetExceeded(WatchdogError):
@@ -466,7 +466,7 @@ def make_exceptions(root: Path) -> None:
 def make_models(root: Path) -> None:
     write(root / "src" / "llm_meter" / "storage" / "models.py", """
         \"\"\"
-        models.py — Core data structures for llm-watchdog
+        models.py — Core data structures for llm-meter
         ==================================================
         CallLog is the single record written to SQLite for every LLM call.
         Using stdlib dataclasses — no Pydantic, no SQLAlchemy.
@@ -620,7 +620,7 @@ def make_cli(root: Path) -> None:
 def make_init(root: Path) -> None:
     write(root / "src" / "llm_meter" / "__init__.py", """
         \"\"\"
-        llm-watchdog
+        llm-meter
         ============
         Zero-config LLM call interceptor.
         Track cost, latency, and token usage. Enforce budgets. No cloud required.
@@ -651,7 +651,7 @@ def make_tests(root: Path) -> None:
 
     write(root / "tests" / "conftest.py", """
         \"\"\"
-        conftest.py — Shared pytest fixtures for llm-watchdog tests
+        conftest.py — Shared pytest fixtures for llm-meter tests
         ============================================================
 
         Two categories:
@@ -660,7 +660,7 @@ def make_tests(root: Path) -> None:
 
         Key fixture: tmp_db
             Every unit test gets a fresh in-memory SQLite DB.
-            This means tests NEVER touch ~/.llm-watchdog/logs.db
+            This means tests NEVER touch ~/.llm-meter/logs.db
             and NEVER interfere with each other.
         \"\"\"
 
@@ -690,7 +690,7 @@ def make_tests(root: Path) -> None:
 
             Usage:
                 def test_something(tmp_db):
-                    # DB is isolated — does not touch ~/.llm-watchdog/
+                    # DB is isolated — does not touch ~/.llm-meter/
                     ...
             \"\"\"
             db_path = str(tmp_path / "test_watchdog.db")
@@ -876,7 +876,7 @@ def make_tests(root: Path) -> None:
 # ── Main Scaffold Function ─────────────────────────────────────────────────────
 
 def scaffold(base_path: str = ".") -> None:
-    root = Path(base_path) / "llm-watchdog"
+    root = Path(base_path) / "llm-meter"
 
     if root.exists():
         print(f"⚠️  Directory '{root}' already exists. Files will be overwritten.")
@@ -938,12 +938,12 @@ Then open a new chat with the starter prompt and say: Today is Day 1
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(
-        description="Scaffold the llm-watchdog project structure"
+        description="Scaffold the llm-meter project structure"
     )
     parser.add_argument(
         "--path",
         default=".",
-        help="Parent directory to create llm-watchdog/ in (default: current dir)"
+        help="Parent directory to create llm-meter/ in (default: current dir)"
     )
     args = parser.parse_args()
     scaffold(base_path=args.path)

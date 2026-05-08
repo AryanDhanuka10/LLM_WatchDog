@@ -1,12 +1,12 @@
 # src/llm_meter/exceptions.py
-"""All llm-watchdog exceptions in one place."""
+"""All llm-meter exceptions in one place."""
 from __future__ import annotations
 
 from typing import Optional
 
 
 class WatchdogError(Exception):
-    """Base class for all llm-watchdog exceptions."""
+    """Base class for all llm-meter exceptions."""
 
 
 class BudgetExceeded(WatchdogError):

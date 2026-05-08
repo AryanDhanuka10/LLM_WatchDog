@@ -19,9 +19,9 @@ from llm_meter.cli.commands import summary_cmd, tail_cmd, top_cmd
 
 
 @click.group()
-@click.version_option(package_name="llm-watchdog")
+@click.version_option(package_name="llm-meter")
 def cli() -> None:
-    """llm-watchdog: zero-config LLM call interceptor.
+    """llm-meter: zero-config LLM call interceptor.
 
     Track token usage, cost, and latency for every LLM call — locally,
     with no cloud account required.

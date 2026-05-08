@@ -11,7 +11,7 @@ from llm_meter.storage.models import CallLog
 
 # DB location                                                          
 
-DEFAULT_DB_DIR  = Path.home() / ".llm-watchdog"
+DEFAULT_DB_DIR  = Path.home() / ".llm-meter"
 DEFAULT_DB_PATH = DEFAULT_DB_DIR / "logs.db"
 
 _SCHEMA = """

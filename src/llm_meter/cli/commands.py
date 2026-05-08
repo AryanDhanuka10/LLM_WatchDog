@@ -87,7 +87,7 @@ def _divider(width: int = 72) -> str:
     show_default=True,
     help="Time window to summarise.",
 )
-@click.option("--db", default=None, help="Path to logs.db (default: ~/.llm-watchdog/logs.db)")
+@click.option("--db", default=None, help="Path to logs.db (default: ~/.llm-meter/logs.db)")
 def summary_cmd(last: str, db: Optional[str]) -> None:
     """Show aggregate stats for a time window."""
     db_path = _resolve_db(db)
@@ -115,7 +115,7 @@ def summary_cmd(last: str, db: Optional[str]) -> None:
     label = f"Last {last}" if last != "all" else "All time"
 
     click.echo()
-    click.echo(f"  llm-watchdog summary  ·  {label}")
+    click.echo(f"  llm-meter summary  ·  {label}")
     click.echo(_divider())
     click.echo(f"  Calls          {total_calls:>10,}")
     click.echo(f"  Input tokens   {_fmt_tokens(total_input):>10}")
@@ -247,7 +247,7 @@ def top_cmd(by: str, limit: int, group: str, last: str, db: Optional[str]) -> No
 
     label = f"Last {last}" if last != "all" else "All time"
     click.echo()
-    click.echo(f"  llm-watchdog top  ·  by {by}  ·  grouped by {group}  ·  {label}")
+    click.echo(f"  llm-meter top  ·  by {by}  ·  grouped by {group}  ·  {label}")
     click.echo(_divider(72))
     click.echo(f"  {'NAME':<30} {'CALLS':>6} {'TOKENS':>8} {'COST':>12}")
     click.echo(_divider(72))

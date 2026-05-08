@@ -1,5 +1,5 @@
 # ============================================================
-# llm-watchdog — Development Requirements
+# llm-meter — Development Requirements
 # ============================================================
 # Install with: pip install -r requirements.txt
 # Zero paid services. Zero cloud. Ollama handles all LLM calls.
