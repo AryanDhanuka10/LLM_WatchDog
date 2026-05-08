@@ -1,9 +1,9 @@
-# src/llm_meter/config.py
+# src/llm_ledger/config.py
 """Global configuration for llm-meter.
 
 Usage::
 
-    from llm_meter.config import config, configure, reset_config
+    from llm_ledger.config import config, configure, reset_config
 
     configure(default_tag="my-app", silent=True)
     print(config.default_tag)   # "my-app"

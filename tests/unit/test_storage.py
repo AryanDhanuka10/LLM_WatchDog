@@ -9,8 +9,8 @@ import pytest
 from datetime import datetime, timezone, timedelta
 from pathlib import Path
 
-from llm_meter.storage.models import CallLog
-from llm_meter.storage.db import init_db, insert_log, query_logs, get_total_cost
+from llm_ledger.storage.models import CallLog
+from llm_ledger.storage.db import init_db, insert_log, query_logs, get_total_cost
 
 
 # Fixtures                                                             

@@ -9,13 +9,13 @@ import pytest
 from unittest.mock import MagicMock, patch
 from pathlib import Path
 
-from llm_meter.pricing.table import (
+from llm_ledger.pricing.table import (
     calculate_cost,
     get_price_entry,
     known_models,
     reload,
 )
-from llm_meter.providers.openai import OpenAIProvider
+from llm_ledger.providers.openai import OpenAIProvider
 
 
 # ------------------------------------------------------------------ #
@@ -176,7 +176,7 @@ class TestReload:
 
 class TestBaseProviderInterface:
     def test_cannot_instantiate_base(self):
-        from llm_meter.providers.base import BaseProvider
+        from llm_ledger.providers.base import BaseProvider
         with pytest.raises(TypeError):
             BaseProvider()  # type: ignore
 

@@ -1,4 +1,4 @@
-# src/llm_meter/pricing/table.py
+# src/llm_ledger/pricing/table.py
 from __future__ import annotations
 
 import json

@@ -1,14 +1,14 @@
-# src/llm_meter/core/decorator.py
+# src/llm_ledger/core/decorator.py
 from __future__ import annotations
 
 import functools
 import time
 from typing import Any, Callable, Optional, TypeVar
 
-from llm_meter.providers.openai import OpenAIProvider
-from llm_meter.pricing.table import calculate_cost
-from llm_meter.storage.models import CallLog
-from llm_meter.storage.db import insert_log, DEFAULT_DB_PATH
+from llm_ledger.providers.openai import OpenAIProvider
+from llm_ledger.pricing.table import calculate_cost
+from llm_ledger.storage.models import CallLog
+from llm_ledger.storage.db import insert_log, DEFAULT_DB_PATH
 
 from pathlib import Path
 

@@ -28,14 +28,14 @@ anthropic = ["anthropic>=0.25"]
 dev = ["pytest", "pytest-mock", "pytest-cov", "ruff", "mypy", "build", "twine"]
 
 [project.scripts]
-watchdog = "llm_meter.cli.__main__:cli"
+watchdog = "llm_ledger.cli.__main__:cli"
 
 [project.urls]
 Repository = "https://github.com/yourname/llm-meter"
 "Bug Tracker" = "https://github.com/yourname/llm-meter/issues"
 
 [tool.hatch.build.targets.wheel]
-packages = ["src/llm_meter"]
+packages = ["src/llm_ledger"]
 
 [tool.ruff]
 line-length = 100
