@@ -1,9 +1,9 @@
-# src/llm_watchdog/config.py
+# src/llm_meter/config.py
 """Global configuration for llm-watchdog.
 
 Usage::
 
-    from llm_watchdog.config import config, configure, reset_config
+    from llm_meter.config import config, configure, reset_config
 
     configure(default_tag="my-app", silent=True)
     print(config.default_tag)   # "my-app"

@@ -1,4 +1,4 @@
-# src/llm_watchdog/pricing/table.py
+# src/llm_meter/pricing/table.py
 from __future__ import annotations
 
 import json

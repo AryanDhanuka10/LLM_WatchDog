@@ -1,4 +1,4 @@
-# src/llm_watchdog/storage/db.py
+# src/llm_meter/storage/db.py
 from __future__ import annotations
 
 import sqlite3
@@ -7,7 +7,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Optional
 
-from llm_watchdog.storage.models import CallLog
+from llm_meter.storage.models import CallLog
 
 # DB location                                                          
 

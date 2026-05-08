@@ -1,10 +1,10 @@
-# src/llm_watchdog/providers/openai.py
+# src/llm_meter/providers/openai.py
 from __future__ import annotations
 
 from typing import Any, Tuple
 
-from llm_watchdog.providers.base import BaseProvider
-from llm_watchdog.pricing.table import calculate_cost
+from llm_meter.providers.base import BaseProvider
+from llm_meter.pricing.table import calculate_cost
 
 
 class OpenAIProvider(BaseProvider):

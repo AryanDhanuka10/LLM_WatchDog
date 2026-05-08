@@ -1,4 +1,4 @@
-# src/llm_watchdog/core/budget.py
+# src/llm_meter/core/budget.py
 from __future__ import annotations
 
 import time
@@ -7,11 +7,11 @@ from datetime import datetime, timezone, timedelta
 from pathlib import Path
 from typing import Any, Generator, Optional
 
-from llm_watchdog.exceptions import BudgetExceeded
-from llm_watchdog.providers.openai import OpenAIProvider
-from llm_watchdog.pricing.table import calculate_cost
-from llm_watchdog.storage.models import CallLog
-from llm_watchdog.storage.db import insert_log, get_total_cost, DEFAULT_DB_PATH
+from llm_meter.exceptions import BudgetExceeded
+from llm_meter.providers.openai import OpenAIProvider
+from llm_meter.pricing.table import calculate_cost
+from llm_meter.storage.models import CallLog
+from llm_meter.storage.db import insert_log, get_total_cost, DEFAULT_DB_PATH
 
 _PROVIDERS = [OpenAIProvider()]
 
@@ -143,7 +143,7 @@ def Budget(
 
     Usage::
 
-        from llm_watchdog import Budget, BudgetExceeded
+        from llm_meter import Budget, BudgetExceeded
 
         try:
             with Budget(max_usd=0.10, user_id="alice") as b:

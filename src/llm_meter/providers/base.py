@@ -1,4 +1,4 @@
-# src/llm_watchdog/providers/base.py
+# src/llm_meter/providers/base.py
 from __future__ import annotations
 
 from abc import ABC, abstractmethod

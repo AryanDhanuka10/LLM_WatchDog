@@ -1,4 +1,4 @@
-# src/llm_watchdog/cli/commands.py
+# src/llm_meter/cli/commands.py
 from __future__ import annotations
 
 import sqlite3
@@ -8,14 +8,14 @@ from typing import Optional
 
 import click
 
-from llm_watchdog.storage.db import (
+from llm_meter.storage.db import (
     DEFAULT_DB_PATH,
     init_db,
     query_logs,
     get_total_cost,
     _connect,
 )
-from llm_watchdog.storage.models import CallLog
+from llm_meter.storage.models import CallLog
 
 
 # Helpers                                                              

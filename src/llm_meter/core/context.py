@@ -1,4 +1,4 @@
-# src/llm_watchdog/core/context.py
+# src/llm_meter/core/context.py
 from __future__ import annotations
 
 import time
@@ -7,10 +7,10 @@ from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any, Generator, Optional
 
-from llm_watchdog.providers.openai import OpenAIProvider
-from llm_watchdog.pricing.table import calculate_cost
-from llm_watchdog.storage.models import CallLog
-from llm_watchdog.storage.db import insert_log, DEFAULT_DB_PATH
+from llm_meter.providers.openai import OpenAIProvider
+from llm_meter.pricing.table import calculate_cost
+from llm_meter.storage.models import CallLog
+from llm_meter.storage.db import insert_log, DEFAULT_DB_PATH
 
 # Same provider registry as decorator — kept in sync manually until Day 8
 _PROVIDERS = [
@@ -25,9 +25,7 @@ def _detect_provider(response: Any):
     return None
 
 
-# ------------------------------------------------------------------ #
-# WatchContext — the object yielded by watch()                         #
-# ------------------------------------------------------------------ #
+# WatchContext — the object yielded by watch()                         
 
 @dataclass
 class WatchContext:
@@ -66,9 +64,7 @@ class WatchContext:
         return len(self._calls)
 
 
-# ------------------------------------------------------------------ #
-# watch() — the public context manager                                 #
-# ------------------------------------------------------------------ #
+# watch() — the public context manager                                 
 
 @contextmanager
 def watch(
@@ -137,10 +133,8 @@ def watch(
         raise exc_caught
 
 
-# ------------------------------------------------------------------ #
-# WatchContext.add_response  — must be defined after watch() because  #
-# it needs access to the same _PROVIDERS list and insert_log           #
-# ------------------------------------------------------------------ #
+# WatchContext.add_response  — must be defined after watch() because  
+# it needs access to the same _PROVIDERS list and insert_log           
 
 def _add_response(self: WatchContext, response: Any, *, db_path: Optional[Path] = None) -> None:
     """Register a raw API response inside the watch() block.

@@ -9,10 +9,10 @@ import pytest
 from pathlib import Path
 from unittest.mock import MagicMock
 
-from llm_watchdog.core.budget import Budget, BudgetContext
-from llm_watchdog.exceptions import BudgetExceeded
-from llm_watchdog.storage.db import init_db, query_logs, insert_log, get_total_cost
-from llm_watchdog.storage.models import CallLog
+from llm_meter.core.budget import Budget, BudgetContext
+from llm_meter.exceptions import BudgetExceeded
+from llm_meter.storage.db import init_db, query_logs, insert_log, get_total_cost
+from llm_meter.storage.models import CallLog
 
 
 # Fixtures                                                             
@@ -66,7 +66,7 @@ class TestBudgetExceededException:
         assert "session" in str(err)
 
     def test_is_watchdog_error(self):
-        from llm_watchdog.exceptions import WatchdogError
+        from llm_meter.exceptions import WatchdogError
         assert isinstance(BudgetExceeded(spent=0.1, limit=0.05), WatchdogError)
 
     def test_is_exception(self):

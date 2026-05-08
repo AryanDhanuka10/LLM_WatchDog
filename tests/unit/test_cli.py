@@ -12,9 +12,9 @@ from datetime import datetime, timezone, timedelta
 
 from click.testing import CliRunner
 
-from llm_watchdog.cli.__main__ import cli
-from llm_watchdog.storage.db import init_db, insert_log
-from llm_watchdog.storage.models import CallLog
+from llm_meter.cli.__main__ import cli
+from llm_meter.storage.db import init_db, insert_log
+from llm_meter.storage.models import CallLog
 
 
 # Fixtures                                                             
@@ -296,36 +296,36 @@ class TestTopCommand:
 class TestFormatHelpers:
 
     def test_fmt_cost_zero(self):
-        from llm_watchdog.cli.commands import _fmt_cost
+        from llm_meter.cli.commands import _fmt_cost
         assert _fmt_cost(0.0) == "$0.00"
 
     def test_fmt_cost_small(self):
-        from llm_watchdog.cli.commands import _fmt_cost
+        from llm_meter.cli.commands import _fmt_cost
         result = _fmt_cost(0.000001)
         assert "$" in result
         assert "0" in result
 
     def test_fmt_cost_normal(self):
-        from llm_watchdog.cli.commands import _fmt_cost
+        from llm_meter.cli.commands import _fmt_cost
         assert _fmt_cost(0.0125) == "$0.0125"
 
     def test_fmt_tokens_small(self):
-        from llm_watchdog.cli.commands import _fmt_tokens
+        from llm_meter.cli.commands import _fmt_tokens
         assert _fmt_tokens(999) == "999"
 
     def test_fmt_tokens_thousands(self):
-        from llm_watchdog.cli.commands import _fmt_tokens
+        from llm_meter.cli.commands import _fmt_tokens
         assert "k" in _fmt_tokens(1500)
 
     def test_fmt_tokens_millions(self):
-        from llm_watchdog.cli.commands import _fmt_tokens
+        from llm_meter.cli.commands import _fmt_tokens
         assert "M" in _fmt_tokens(1_500_000)
 
     def test_fmt_latency_ms(self):
-        from llm_watchdog.cli.commands import _fmt_latency
+        from llm_meter.cli.commands import _fmt_latency
         assert "ms" in _fmt_latency(250.0)
 
     def test_fmt_latency_seconds(self):
-        from llm_watchdog.cli.commands import _fmt_latency
+        from llm_meter.cli.commands import _fmt_latency
         assert "s" in _fmt_latency(1500.0)
         assert "ms" not in _fmt_latency(1500.0)

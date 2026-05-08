@@ -1,4 +1,4 @@
-# src/llm_watchdog/exceptions.py
+# src/llm_meter/exceptions.py
 """All llm-watchdog exceptions in one place."""
 from __future__ import annotations
 

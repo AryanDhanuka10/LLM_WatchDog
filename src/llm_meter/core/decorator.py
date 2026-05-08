@@ -1,14 +1,14 @@
-# src/llm_watchdog/core/decorator.py
+# src/llm_meter/core/decorator.py
 from __future__ import annotations
 
 import functools
 import time
 from typing import Any, Callable, Optional, TypeVar
 
-from llm_watchdog.providers.openai import OpenAIProvider
-from llm_watchdog.pricing.table import calculate_cost
-from llm_watchdog.storage.models import CallLog
-from llm_watchdog.storage.db import insert_log, DEFAULT_DB_PATH
+from llm_meter.providers.openai import OpenAIProvider
+from llm_meter.pricing.table import calculate_cost
+from llm_meter.storage.models import CallLog
+from llm_meter.storage.db import insert_log, DEFAULT_DB_PATH
 
 from pathlib import Path
 
