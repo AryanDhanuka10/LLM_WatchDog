@@ -30,3 +30,5 @@ twine>=5.0              # twine upload dist/* → PyPI
 #   pydantic     — overkill, we use stdlib dataclasses
 #   pandas       — overkill, export is a for loop
 # ============================================================
+
+-e.
