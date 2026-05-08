@@ -10,7 +10,7 @@ from typing import Any, Generator, Optional
 from llm_ledger.providers.openai import OpenAIProvider
 from llm_ledger.pricing.table import calculate_cost
 from llm_ledger.storage.models import CallLog
-from llm_ledger.storage.db import insert_log, DEFAULT_DB_PATH
+from llm_ledger.storage.db import insert_log, init_db, DEFAULT_DB_PATH
 
 # Same provider registry as decorator — kept in sync manually until Day 8
 _PROVIDERS = [
@@ -97,6 +97,7 @@ def watch(
         db_path:    Override default DB path (useful in tests).
     """
     resolved_db = db_path or DEFAULT_DB_PATH
+    init_db(resolved_db)
     ctx = WatchContext(tag=tag, user_id=user_id, session_id=session_id)
 
     t_start = time.perf_counter()

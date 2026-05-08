@@ -35,6 +35,7 @@ from llm_ledger.exceptions import (
     ProviderNotDetected,
     PricingModelNotFound,
 )
+from llm_ledger.core.interceptor import intercept, stop, is_active
 
 __all__ = [
     # Core API
