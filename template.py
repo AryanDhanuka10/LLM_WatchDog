@@ -608,7 +608,7 @@ def make_cli(root: Path) -> None:
         # TODO: Day 5
     """)
 
-    write(root / "src" / "llm_ledger" / "cli" / "commands.py", """
+    write(root / "src" / "llm_ledger" / "cli" / "commands.py", "export.py, """"
         \"\"\"
         commands.py — CLI commands (PLACEHOLDER)
         Full implementation on Day 5.

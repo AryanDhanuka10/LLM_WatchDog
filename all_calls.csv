@@ -1,0 +1,2 @@
+id,timestamp,provider,model,input_tokens,output_tokens,total_tokens,cost_usd,latency_ms,success,tag,user_id,session_id,error_msg
+80ae3e1e-8c0e-4dba-8b66-0632076a94af,2026-05-08T09:46:02.955842+00:00,openai,qwen2.5:0.5b,35,3,38,0.0,95.00419999676524,True,real-world-test,aryan,,

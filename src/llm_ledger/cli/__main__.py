@@ -16,12 +16,13 @@ from __future__ import annotations
 import click
 
 from llm_ledger.cli.commands import summary_cmd, tail_cmd, top_cmd
+from llm_ledger.cli.export import export_cmd
 
 
 @click.group()
-@click.version_option(package_name="llm-meter")
+@click.version_option(package_name="llm-watchdog")
 def cli() -> None:
-    """llm-meter: zero-config LLM call interceptor.
+    """llm-watchdog: zero-config LLM call interceptor.
 
     Track token usage, cost, and latency for every LLM call — locally,
     with no cloud account required.
@@ -37,6 +38,7 @@ def cli() -> None:
 cli.add_command(summary_cmd, name="summary")
 cli.add_command(tail_cmd,    name="tail")
 cli.add_command(top_cmd,     name="top")
+cli.add_command(export_cmd,  name="export")
 
 
 if __name__ == "__main__":
