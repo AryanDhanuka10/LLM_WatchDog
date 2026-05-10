@@ -1,10 +1,10 @@
-# src/llm_ledger/providers/openai.py
+# src/infertrack/providers/openai.py
 from __future__ import annotations
 
 from typing import Any, Tuple
 
-from llm_ledger.providers.base import BaseProvider
-from llm_ledger.pricing.table import calculate_cost
+from infertrack.providers.base import BaseProvider
+from infertrack.pricing.table import calculate_cost
 
 
 class OpenAIProvider(BaseProvider):

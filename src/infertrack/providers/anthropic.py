@@ -1,4 +1,4 @@
-# src/llm_ledger/providers/anthropic.py
+# src/infertrack/providers/anthropic.py
 """Provider adapter for Anthropic Claude API responses.
 
 Handles ``anthropic.types.Message`` objects returned by
@@ -11,8 +11,8 @@ from __future__ import annotations
 
 from typing import Any, Tuple
 
-from llm_ledger.providers.base import BaseProvider
-from llm_ledger.pricing.table import calculate_cost
+from infertrack.providers.base import BaseProvider
+from infertrack.pricing.table import calculate_cost
 
 
 class AnthropicProvider(BaseProvider):

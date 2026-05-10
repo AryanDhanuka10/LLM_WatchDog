@@ -8,8 +8,8 @@ from __future__ import annotations
 import pytest
 from unittest.mock import MagicMock
 
-from llm_ledger.providers.anthropic import AnthropicProvider
-from llm_ledger.pricing.table import calculate_cost
+from infertrack.providers.anthropic import AnthropicProvider
+from infertrack.pricing.table import calculate_cost
 
 
 # Helpers                                                              
@@ -239,7 +239,7 @@ class TestProviderRegistry:
     correctly routes OpenAI vs Anthropic responses."""
 
     def test_openai_detected_by_openai_provider(self):
-        from llm_ledger.providers.openai import OpenAIProvider
+        from infertrack.providers.openai import OpenAIProvider
         p = OpenAIProvider()
         assert p.detect(make_openai_response()) is True
         assert p.detect(make_anthropic_response()) is False
@@ -250,13 +250,13 @@ class TestProviderRegistry:
         assert p.detect(make_openai_response()) is False
 
     def test_decorator_registry_has_both_providers(self):
-        from llm_ledger.core.decorator import _PROVIDERS
+        from infertrack.core.decorator import _PROVIDERS
         names = [p.name for p in _PROVIDERS]
         assert "openai"    in names
         assert "anthropic" in names
 
     def test_context_registry_has_both_providers(self):
-        from llm_ledger.core.context import _PROVIDERS
+        from infertrack.core.context import _PROVIDERS
         names = [p.name for p in _PROVIDERS]
         assert "openai"    in names
         assert "anthropic" in names
@@ -264,7 +264,7 @@ class TestProviderRegistry:
     def test_interceptor_registry_has_both_providers(self):
         # interceptor stores providers as a module-level list _PROVIDERS
         # added by the Day 8 patch; verify by checking the source directly
-        import llm_ledger.core.interceptor as imod
+        import infertrack.core.interceptor as imod
         providers = getattr(imod, "_PROVIDERS", None)
         assert providers is not None, "_PROVIDERS not found in interceptor"
         names = [p.name for p in providers]
@@ -275,8 +275,8 @@ class TestProviderRegistry:
         """@watchdog must log provider='anthropic' for Anthropic responses."""
         from pathlib import Path
         import tempfile
-        from llm_ledger.core.decorator import watchdog
-        from llm_ledger.storage.db import init_db, query_logs
+        from infertrack.core.decorator import watchdog
+        from infertrack.storage.db import init_db, query_logs
 
         with tempfile.TemporaryDirectory() as d:
             db = Path(d) / "test.db"

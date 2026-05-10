@@ -1,6 +1,6 @@
 # Changelog
 
-All notable changes to `llm-ledger` are documented here.
+All notable changes to `infertrack` are documented here.
 
 Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 Versioning follows [Semantic Versioning](https://semver.org/).
@@ -15,7 +15,7 @@ Versioning follows [Semantic Versioning](https://semver.org/).
 - `core/retry.py` — `with_retry()` with `exponential`, `linear`, `fixed` backoff
 - `@watchdog(retry=N, backoff=...)` — built-in retry with configurable strategy
 - `providers/anthropic.py` — full Anthropic Claude provider support
-- `core/interceptor.py` — `llm_ledger.intercept()` / `stop()` zero-code-change global patch
+- `core/interceptor.py` — `infertrack.intercept()` / `stop()` zero-code-change global patch
 - `cli/export.py` — `watchdog export --format csv/json` with file and filter support
 - `tests/unit/test_coverage_gaps.py` — targeted gap coverage tests
 - `.github/workflows/test.yml` — CI matrix on Python 3.10 / 3.11 / 3.12
@@ -52,4 +52,4 @@ Versioning follows [Semantic Versioning](https://semver.org/).
 - `exceptions.py` — `WatchdogError`, `BudgetExceeded`, `ProviderNotDetected`, `PricingModelNotFound`
 - `config.py` — `WatchdogConfig` singleton, `configure()`, `reset_config()`
 - `cli/__main__.py` + `cli/commands.py` — `summary`, `tail`, `top` subcommands
-- Published to TestPyPI as `llm-ledger 0.1.0`
+- Published to TestPyPI as `infertrack 0.1.0`

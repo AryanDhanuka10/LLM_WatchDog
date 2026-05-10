@@ -9,14 +9,14 @@ import pytest
 from pathlib import Path
 from unittest.mock import MagicMock, patch
 
-from llm_ledger.core.streaming import (
+from infertrack.core.streaming import (
     is_streaming_response,
     StreamingWrapper,
     _extract_chunk_usage,
     _extract_chunk_model,
 )
-from llm_ledger.core.decorator import watchdog
-from llm_ledger.storage.db import init_db, query_logs
+from infertrack.core.decorator import watchdog
+from infertrack.storage.db import init_db, query_logs
 
 
 # Fixtures                                                             

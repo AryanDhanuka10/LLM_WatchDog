@@ -3,7 +3,7 @@ requires = ["hatchling"]
 build-backend = "hatchling.build"
 
 [project]
-name = "llm-ledger"
+name = "infertrack"
 version = "1.0.0"
 description = "Zero-config LLM call interceptor: cost, latency, and budget enforcement"
 readme = "README.md"
@@ -38,15 +38,15 @@ dev = [
 ]
 
 [project.scripts]
-watchdog = "llm_ledger.cli.__main__:cli"
+watchdog = "infertrack.cli.__main__:cli"
 
 [project.urls]
-Repository = "https://github.com/yourname/llm-ledger"
-"Bug Tracker" = "https://github.com/yourname/llm-ledger/issues"
-Changelog = "https://github.com/yourname/llm-ledger/blob/main/CHANGELOG.md"
+Repository = "https://github.com/yourname/infertrack"
+"Bug Tracker" = "https://github.com/yourname/infertrack/issues"
+Changelog = "https://github.com/yourname/infertrack/blob/main/CHANGELOG.md"
 
 [tool.hatch.build.targets.wheel]
-packages = ["src/llm_ledger"]
+packages = ["src/infertrack"]
 
 [tool.hatch.build.targets.sdist]
 include = [
@@ -57,7 +57,7 @@ include = [
     "pyproject.toml",
 ]
 exclude = [
-    "src/llm_ledger/scratch_*.py",
+    "src/infertrack/scratch_*.py",
 ]
 
 [tool.pytest.ini_options]
@@ -67,7 +67,7 @@ markers = [
 ]
 
 [tool.coverage.run]
-source = ["src/llm_ledger"]
+source = ["src/infertrack"]
 omit = [
     "*/tests/*",
     "*/__pycache__/*",

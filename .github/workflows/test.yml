@@ -33,7 +33,7 @@ jobs:
       - name: Run unit tests with coverage
         run: |
           pytest tests/unit/ \
-            --cov=src/llm_ledger \
+            --cov=src/infertrack \
             --cov-report=term-missing \
             --cov-fail-under=80 \
             -v \

@@ -1,6 +1,6 @@
 # tests/unit/test_interceptor.py
 """
-Day 7 tests: global interceptor via llm_ledger.intercept() / stop().
+Day 7 tests: global interceptor via infertrack.intercept() / stop().
 All tests mock the openai module entirely — no real openai install needed.
 """
 from __future__ import annotations
@@ -11,7 +11,7 @@ import pytest
 from pathlib import Path
 from unittest.mock import MagicMock, patch
 
-from llm_ledger.storage.db import init_db, query_logs
+from infertrack.storage.db import init_db, query_logs
 
 
 # Build a minimal fake openai module tree before any test runs         #
@@ -58,8 +58,8 @@ def _build_fake_openai():
 FakeCompletions = _build_fake_openai()
 
 # Now safe to import
-from llm_ledger.core.interceptor import intercept, stop, is_active, _make_wrapper
-import llm_ledger.core.interceptor as imod
+from infertrack.core.interceptor import intercept, stop, is_active, _make_wrapper
+import infertrack.core.interceptor as imod
 
 
 # Fixtures                                                             
@@ -300,11 +300,11 @@ class TestInterceptorExceptions:
 class TestTopLevelExports:
 
     def test_intercept_importable_from_core(self):
-        from llm_ledger.core.interceptor import intercept, stop, is_active
+        from infertrack.core.interceptor import intercept, stop, is_active
         assert callable(intercept)
         assert callable(stop)
         assert callable(is_active)
 
     def test_make_wrapper_is_callable(self):
-        from llm_ledger.core.interceptor import _make_wrapper
+        from infertrack.core.interceptor import _make_wrapper
         assert callable(_make_wrapper)

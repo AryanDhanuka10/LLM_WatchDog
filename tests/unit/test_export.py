@@ -13,9 +13,9 @@ from pathlib import Path
 import pytest
 from click.testing import CliRunner
 
-from llm_ledger.cli.__main__ import cli
-from llm_ledger.storage.db import init_db, insert_log
-from llm_ledger.storage.models import CallLog
+from infertrack.cli.__main__ import cli
+from infertrack.storage.db import init_db, insert_log
+from infertrack.storage.models import CallLog
 
 
 # Fixtures                                                             
@@ -335,7 +335,7 @@ class TestExportEmptyDB:
 class TestLogToDict:
 
     def test_all_keys_present(self):
-        from llm_ledger.cli.export import _log_to_dict
+        from infertrack.cli.export import _log_to_dict
         log = CallLog(
             provider="openai", model="gpt-4o",
             input_tokens=10, output_tokens=20,
@@ -350,14 +350,14 @@ class TestLogToDict:
             assert key in d
 
     def test_total_tokens_computed(self):
-        from llm_ledger.cli.export import _log_to_dict
+        from infertrack.cli.export import _log_to_dict
         log = CallLog(provider="openai", model="x",
                       input_tokens=10, output_tokens=25,
                       cost_usd=0.0, latency_ms=1.0, success=True)
         assert _log_to_dict(log)["total_tokens"] == 35
 
     def test_timestamp_is_iso_string(self):
-        from llm_ledger.cli.export import _log_to_dict
+        from infertrack.cli.export import _log_to_dict
         from datetime import datetime
         log = CallLog(provider="openai", model="x",
                       input_tokens=1, output_tokens=1,

@@ -1,12 +1,12 @@
-# src/llm_ledger/__init__.py
-"""llm-ledger: Zero-config LLM call interceptor.
+# src/infertrack/__init__.py
+"""infertrack: Zero-config LLM call interceptor.
 
 Track token usage, cost, and latency for every LLM call — locally,
 with no cloud account required.
 
 Quick start::
 
-    from llm_ledger import watchdog, watch, Budget, BudgetExceeded
+    from infertrack import watchdog, watch, Budget, BudgetExceeded
 
     # Decorator
     @watchdog(tag="my-feature")
@@ -24,18 +24,18 @@ Quick start::
         b.add_response(client.chat.completions.create(...))
 
     # Zero-code-change global intercept
-    import llm_ledger
-    llm_ledger.intercept(tag="my-app")
+    import infertrack
+    infertrack.intercept(tag="my-app")
     # all subsequent client.chat.completions.create() calls are logged
 """
 
 __version__ = "1.0.0"
 
-from llm_ledger.core.decorator import watchdog
-from llm_ledger.core.context import watch, WatchContext
-from llm_ledger.core.budget import Budget, BudgetContext
-from llm_ledger.core.interceptor import intercept, stop, is_active
-from llm_ledger.exceptions import (
+from infertrack.core.decorator import watchdog
+from infertrack.core.context import watch, WatchContext
+from infertrack.core.budget import Budget, BudgetContext
+from infertrack.core.interceptor import intercept, stop, is_active
+from infertrack.exceptions import (
     WatchdogError,
     BudgetExceeded,
     ProviderNotDetected,

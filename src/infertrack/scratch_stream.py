@@ -1,4 +1,4 @@
-from llm_ledger import watchdog
+from infertrack import watchdog
 
 @watchdog(tag="stream", user_id="alice")
 def ask_stream(prompt):

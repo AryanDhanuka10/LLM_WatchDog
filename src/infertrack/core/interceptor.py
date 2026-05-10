@@ -1,17 +1,17 @@
-# src/llm_ledger/core/interceptor.py
+# src/infertrack/core/interceptor.py
 """Global monkey-patch interceptor.
 
 Usage::
 
-    import llm_ledger
-    llm_ledger.intercept()          # patch once at startup
+    import infertrack
+    infertrack.intercept()          # patch once at startup
 
     # All subsequent calls are logged automatically — zero other changes
     client = OpenAI(...)
     client.chat.completions.create(...)   # logged
     client.chat.completions.create(...)   # logged
 
-    llm_ledger.stop()               # restore originals
+    infertrack.stop()               # restore originals
 """
 from __future__ import annotations
 
@@ -20,11 +20,11 @@ import time
 from pathlib import Path
 from typing import Any, Optional
 
-from llm_ledger.providers.openai import OpenAIProvider
-from llm_ledger.providers.anthropic import AnthropicProvider
-from llm_ledger.pricing.table import calculate_cost
-from llm_ledger.storage.models import CallLog
-from llm_ledger.storage.db import insert_log, init_db, DEFAULT_DB_PATH
+from infertrack.providers.openai import OpenAIProvider
+from infertrack.providers.anthropic import AnthropicProvider
+from infertrack.pricing.table import calculate_cost
+from infertrack.storage.models import CallLog
+from infertrack.storage.db import insert_log, init_db, DEFAULT_DB_PATH
 
 # Module-level state                                                   
 
@@ -158,8 +158,8 @@ def intercept(
 
     Example::
 
-        import llm_ledger
-        llm_ledger.intercept(tag="my-app")
+        import infertrack
+        infertrack.intercept(tag="my-app")
 
         from openai import OpenAI
         client = OpenAI(base_url="http://localhost:11434/v1", api_key="ollama")
@@ -167,7 +167,7 @@ def intercept(
     """
     if _intercept_config["active"]:
         raise RuntimeError(
-            "intercept() already active. Call llm_ledger.stop() first."
+            "intercept() already active. Call infertrack.stop() first."
         )
 
     try:
@@ -218,7 +218,7 @@ def intercept(
         # anthropic installed but internal structure changed — warn, don't crash
         import warnings  # pragma: no cover
         warnings.warn(  # pragma: no cover
-            f"llm_ledger: could not patch anthropic.Messages.create: {exc}. "
+            f"infertrack: could not patch anthropic.Messages.create: {exc}. "
             f"Anthropic calls will not be intercepted.",
             stacklevel=2,
         )
@@ -231,9 +231,9 @@ def stop() -> None:
 
     Example::
 
-        llm_ledger.intercept()
+        infertrack.intercept()
         # ... do work ...
-        llm_ledger.stop()
+        infertrack.stop()
     """
     if not _intercept_config["active"]:
         return

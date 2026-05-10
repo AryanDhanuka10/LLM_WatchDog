@@ -82,14 +82,14 @@ def make_pyproject(root: Path) -> None:
         dev = ["pytest", "pytest-mock", "pytest-cov", "ruff", "mypy", "build", "twine"]
 
         [project.scripts]
-        watchdog = "llm_ledger.cli.__main__:cli"
+        watchdog = "infertrack.cli.__main__:cli"
 
         [project.urls]
         Repository = "https://github.com/yourname/llm-meter"
         "Bug Tracker" = "https://github.com/yourname/llm-meter/issues"
 
         [tool.hatch.build.targets.wheel]
-        packages = ["src/llm_ledger"]
+        packages = ["src/infertrack"]
 
         [tool.ruff]
         line-length = 100
@@ -195,7 +195,7 @@ def make_readme(root: Path) -> None:
 
         ```python
         from openai import OpenAI
-        from llm_ledger import watchdog
+        from infertrack import watchdog
 
         client = OpenAI(base_url="http://localhost:11434/v1", api_key="ollama")
 
@@ -252,14 +252,14 @@ def make_prices_json(root: Path) -> None:
         "claude-3-5-haiku-20241022":  {"input_per_1k": 0.001,   "output_per_1k": 0.005},
         "claude-3-opus-20240229":     {"input_per_1k": 0.015,   "output_per_1k": 0.075},
     }
-    path = root / "src" / "llm_ledger" / "pricing" / "prices.json"
+    path = root / "src" / "infertrack" / "pricing" / "prices.json"
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(json.dumps(prices, indent=2))
     print(f"  created  {path}")
 
 
 def make_config(root: Path) -> None:
-    write(root / "src" / "llm_ledger" / "config.py", """
+    write(root / "src" / "infertrack" / "config.py", """
         \"\"\"
         config.py — Central configuration for llm-meter
         ====================================================
@@ -277,13 +277,13 @@ def make_config(root: Path) -> None:
             to look. config.py is that obvious place.
 
         Usage:
-            from llm_ledger.config import config
+            from infertrack.config import config
 
             # Read a setting
             db_path = config.db_path
 
             # Override at runtime (e.g. in tests)
-            from llm_ledger.config import configure
+            from infertrack.config import configure
             configure(db_path=":memory:", default_tag="test")
         \"\"\"
 
@@ -369,7 +369,7 @@ def make_config(root: Path) -> None:
             Override config values at runtime.
 
             Example:
-                from llm_ledger.config import configure
+                from infertrack.config import configure
                 configure(db_path=":memory:", default_tag="pytest")
 
             Useful for:
@@ -404,7 +404,7 @@ def make_config(root: Path) -> None:
 
 
 def make_exceptions(root: Path) -> None:
-    write(root / "src" / "llm_ledger" / "exceptions.py", """
+    write(root / "src" / "infertrack" / "exceptions.py", """
         \"\"\"
         exceptions.py — All custom exceptions for llm-meter
         \"\"\"
@@ -464,7 +464,7 @@ def make_exceptions(root: Path) -> None:
 
 
 def make_models(root: Path) -> None:
-    write(root / "src" / "llm_ledger" / "storage" / "models.py", """
+    write(root / "src" / "infertrack" / "storage" / "models.py", """
         \"\"\"
         models.py — Core data structures for llm-meter
         ==================================================
@@ -535,7 +535,7 @@ def make_models(root: Path) -> None:
 
 
 def make_db(root: Path) -> None:
-    write(root / "src" / "llm_ledger" / "storage" / "db.py", """
+    write(root / "src" / "infertrack" / "storage" / "db.py", """
         \"\"\"
         db.py — SQLite storage layer (PLACEHOLDER)
         ==========================================
@@ -547,7 +547,7 @@ def make_db(root: Path) -> None:
 
 
 def make_providers(root: Path) -> None:
-    write(root / "src" / "llm_ledger" / "providers" / "base.py", """
+    write(root / "src" / "infertrack" / "providers" / "base.py", """
         \"\"\"
         base.py — Abstract provider interface (PLACEHOLDER)
         Full implementation on Day 2.
@@ -555,7 +555,7 @@ def make_providers(root: Path) -> None:
         # TODO: Day 2
     """)
 
-    write(root / "src" / "llm_ledger" / "providers" / "openai.py", """
+    write(root / "src" / "infertrack" / "providers" / "openai.py", """
         \"\"\"
         openai.py — OpenAI + Ollama provider (PLACEHOLDER)
         Full implementation on Day 2.
@@ -563,7 +563,7 @@ def make_providers(root: Path) -> None:
         # TODO: Day 2
     """)
 
-    write(root / "src" / "llm_ledger" / "providers" / "anthropic.py", """
+    write(root / "src" / "infertrack" / "providers" / "anthropic.py", """
         \"\"\"
         anthropic.py — Anthropic provider (PLACEHOLDER)
         Full implementation on Day 8.
@@ -573,7 +573,7 @@ def make_providers(root: Path) -> None:
 
 
 def make_pricing(root: Path) -> None:
-    write(root / "src" / "llm_ledger" / "pricing" / "table.py", """
+    write(root / "src" / "infertrack" / "pricing" / "table.py", """
         \"\"\"
         table.py — Pricing table loader (PLACEHOLDER)
         Full implementation on Day 2.
@@ -590,7 +590,7 @@ def make_core(root: Path) -> None:
         ("interceptor.py", 7),
         ("retry.py", 3),
     ]:
-        write(root / "src" / "llm_ledger" / "core" / name, f"""
+        write(root / "src" / "infertrack" / "core" / name, f"""
             \"\"\"
             {name} — PLACEHOLDER
             Full implementation on Day {day}.
@@ -600,7 +600,7 @@ def make_core(root: Path) -> None:
 
 
 def make_cli(root: Path) -> None:
-    write(root / "src" / "llm_ledger" / "cli" / "__main__.py", """
+    write(root / "src" / "infertrack" / "cli" / "__main__.py", """
         \"\"\"
         __main__.py — CLI entry point (PLACEHOLDER)
         Full implementation on Day 5.
@@ -608,7 +608,7 @@ def make_cli(root: Path) -> None:
         # TODO: Day 5
     """)
 
-    write(root / "src" / "llm_ledger" / "cli" / "commands.py", "export.py, """"
+    write(root / "src" / "infertrack" / "cli" / "commands.py", "export.py, """"
         \"\"\"
         commands.py — CLI commands (PLACEHOLDER)
         Full implementation on Day 5.
@@ -618,7 +618,7 @@ def make_cli(root: Path) -> None:
 
 
 def make_init(root: Path) -> None:
-    write(root / "src" / "llm_ledger" / "__init__.py", """
+    write(root / "src" / "infertrack" / "__init__.py", """
         \"\"\"
         llm-meter
         ============
@@ -626,7 +626,7 @@ def make_init(root: Path) -> None:
         Track cost, latency, and token usage. Enforce budgets. No cloud required.
 
         Quickstart:
-            from llm_ledger import watchdog
+            from infertrack import watchdog
 
             @watchdog()
             def ask(prompt):
@@ -636,11 +636,11 @@ def make_init(root: Path) -> None:
         __version__ = "0.1.0"
 
         # Public API — populated as days progress
-        # Day 3: from llm_ledger.core.decorator import watchdog
-        # Day 3: from llm_ledger.core.context import watch
-        # Day 4: from llm_ledger.core.budget import Budget
-        # Day 4: from llm_ledger.exceptions import BudgetExceeded
-        # Day 7: from llm_ledger.core.interceptor import intercept
+        # Day 3: from infertrack.core.decorator import watchdog
+        # Day 3: from infertrack.core.context import watch
+        # Day 4: from infertrack.core.budget import Budget
+        # Day 4: from infertrack.exceptions import BudgetExceeded
+        # Day 7: from infertrack.core.interceptor import intercept
     """)
 
 
@@ -666,7 +666,7 @@ def make_tests(root: Path) -> None:
 
         import pytest
         from unittest.mock import MagicMock
-        from llm_ledger.config import configure, reset_config
+        from infertrack.config import configure, reset_config
 
 
         # ── Config isolation ─────────────────────────────────────────────────
@@ -807,19 +807,19 @@ def make_tests(root: Path) -> None:
 
         def test_package_importable():
             \"\"\"Package must be importable after pip install -e .\"\"\"
-            import llm_ledger
-            assert llm_ledger.__version__ == "0.1.0"
+            import infertrack
+            assert infertrack.__version__ == "0.1.0"
 
 
         def test_config_importable():
             \"\"\"Config module must load without errors.\"\"\"
-            from llm_ledger.config import config, configure, reset_config
+            from infertrack.config import config, configure, reset_config
             assert config.default_tag == "default"
 
 
         def test_exceptions_importable():
             \"\"\"All exceptions must be importable.\"\"\"
-            from llm_ledger.exceptions import (
+            from infertrack.exceptions import (
                 WatchdogError,
                 BudgetExceeded,
                 ProviderNotDetected,
@@ -829,7 +829,7 @@ def make_tests(root: Path) -> None:
 
         def test_budget_exceeded_message():
             \"\"\"BudgetExceeded must carry spent/limit/user_id.\"\"\"
-            from llm_ledger.exceptions import BudgetExceeded
+            from infertrack.exceptions import BudgetExceeded
             err = BudgetExceeded(spent=0.15, limit=0.10, user_id="user_42")
             assert err.spent == 0.15
             assert err.limit == 0.10
@@ -839,7 +839,7 @@ def make_tests(root: Path) -> None:
 
         def test_calllog_importable():
             \"\"\"CallLog dataclass must be importable and have correct defaults.\"\"\"
-            from llm_ledger.storage.models import CallLog
+            from infertrack.storage.models import CallLog
             log = CallLog()
             assert log.provider == "unknown"
             assert log.success is True
@@ -849,14 +849,14 @@ def make_tests(root: Path) -> None:
 
         def test_calllog_total_tokens_auto():
             \"\"\"CallLog must auto-compute total_tokens in __post_init__.\"\"\"
-            from llm_ledger.storage.models import CallLog
+            from infertrack.storage.models import CallLog
             log = CallLog(input_tokens=10, output_tokens=20)
             assert log.total_tokens == 30
 
 
         def test_config_override():
             \"\"\"configure() must override a valid key without error.\"\"\"
-            from llm_ledger.config import config, configure, reset_config
+            from infertrack.config import config, configure, reset_config
             configure(default_tag="my_tag", silent=True)
             assert config.default_tag == "my_tag"
             assert config.silent is True
@@ -866,7 +866,7 @@ def make_tests(root: Path) -> None:
 
         def test_config_invalid_key_raises():
             \"\"\"configure() must raise ValueError for unknown keys.\"\"\"
-            from llm_ledger.config import configure
+            from infertrack.config import configure
             import pytest
             with pytest.raises(ValueError, match="Unknown config key"):
                 configure(nonexistent_key="value")
@@ -898,21 +898,21 @@ def scaffold(base_path: str = ".") -> None:
     make_models(root)
     make_db(root)
     for p in ["__init__.py"]:
-        touch(root / "src" / "llm_ledger" / "storage" / p)
+        touch(root / "src" / "infertrack" / "storage" / p)
 
     print("\n── Providers ────────────────────────────────────")
     make_providers(root)
     for p in ["__init__.py"]:
-        touch(root / "src" / "llm_ledger" / "providers" / p)
+        touch(root / "src" / "infertrack" / "providers" / p)
 
     print("\n── Pricing ──────────────────────────────────────")
     make_pricing(root)
     make_prices_json(root)
-    touch(root / "src" / "llm_ledger" / "pricing" / "__init__.py")
+    touch(root / "src" / "infertrack" / "pricing" / "__init__.py")
 
     print("\n── Core (decorators, budget, interceptor) ───────")
     make_core(root)
-    touch(root / "src" / "llm_ledger" / "core" / "__init__.py")
+    touch(root / "src" / "infertrack" / "core" / "__init__.py")
 
     print("\n── CLI ──────────────────────────────────────────")
     make_cli(root)

@@ -1,16 +1,16 @@
-# src/llm_ledger/core/decorator.py
+# src/infertrack/core/decorator.py
 from __future__ import annotations
 
 import functools
 import time
 from typing import Any, Callable, Optional, TypeVar
 
-from llm_ledger.providers.openai import OpenAIProvider
-from llm_ledger.providers.anthropic import AnthropicProvider
-from llm_ledger.pricing.table import calculate_cost
-from llm_ledger.storage.models import CallLog
-from llm_ledger.storage.db import insert_log, init_db, DEFAULT_DB_PATH
-from llm_ledger.core.streaming import is_streaming_response, StreamingWrapper
+from infertrack.providers.openai import OpenAIProvider
+from infertrack.providers.anthropic import AnthropicProvider
+from infertrack.pricing.table import calculate_cost
+from infertrack.storage.models import CallLog
+from infertrack.storage.db import insert_log, init_db, DEFAULT_DB_PATH
+from infertrack.core.streaming import is_streaming_response, StreamingWrapper
 
 from pathlib import Path
 
@@ -143,7 +143,7 @@ def watchdog(
             init_db(resolved_db)
 
             if retry > 0:
-                from llm_ledger.core.retry import with_retry
+                from infertrack.core.retry import with_retry
 
                 retry_count: int = 0
                 exc_caught: Optional[Exception] = None

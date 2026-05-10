@@ -1,5 +1,5 @@
-# src/llm_ledger/core/streaming.py
-"""Streaming response support for llm-ledger.
+# src/infertrack/core/streaming.py
+"""Streaming response support for infertrack.
 
 When a caller uses ``stream=True``, the OpenAI SDK returns a
 ``Stream[ChatCompletionChunk]`` generator instead of a ``ChatCompletion``.

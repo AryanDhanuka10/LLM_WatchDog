@@ -1,4 +1,4 @@
-# src/llm_ledger/core/retry.py
+# src/infertrack/core/retry.py
 """Retry logic for the @watchdog decorator.
 
 Provides two backoff strategies:
@@ -13,7 +13,7 @@ Usage via @watchdog::
 
 Usage standalone::
 
-    from llm_ledger.core.retry import with_retry
+    from infertrack.core.retry import with_retry
 
     result = with_retry(my_fn, args=(prompt,), retries=3, backoff="linear")
 """
@@ -33,7 +33,7 @@ _NO_RETRY_EXCEPTIONS: tuple[Type[BaseException], ...] = (
 )
 
 try:
-    from llm_ledger.exceptions import BudgetExceeded
+    from infertrack.exceptions import BudgetExceeded
     _NO_RETRY_EXCEPTIONS = _NO_RETRY_EXCEPTIONS + (BudgetExceeded,)
 except ImportError:
     pass
@@ -126,7 +126,7 @@ def with_retry(
                 on_retry(attempt + 1, exc, delay)
             else:
                 logger.warning(
-                    "llm_ledger retry %d/%d after %.1fs — %s: %s",
+                    "infertrack retry %d/%d after %.1fs — %s: %s",
                     attempt + 1, retries, delay,
                     type(exc).__name__, exc,
                 )

@@ -1,4 +1,4 @@
-# src/llm_ledger/exceptions.py
+# src/infertrack/exceptions.py
 """All llm-meter exceptions in one place."""
 from __future__ import annotations
 

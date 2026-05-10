@@ -1,13 +1,13 @@
-# llm-ledger
+# infertrack
 
 Zero-config LLM call interceptor. Track token usage, cost, and latency — locally, no cloud required.
 
 ```bash
-pip install llm-ledger
+pip install infertrack
 ```
 
 ```python
-from llm_ledger import watchdog
+from infertrack import watchdog
 
 @watchdog(tag="summarise")
 def ask(prompt):
@@ -21,7 +21,7 @@ ask("Summarise this document...")
 
 ```bash
 $ watchdog summary
-  llm-ledger summary  ·  Last 24h
+  infertrack summary  ·  Last 24h
 ────────────────────────────────────────────────────────────────────────
   Calls                  47
   Input tokens         82.3k
@@ -39,13 +39,13 @@ $ watchdog summary
 
 ---
 
-## Why llm-ledger?
+## Why infertrack?
 
 You're building an LLM feature. You want to know: how many tokens did each call use, how long did it take, what did it cost, did it fail silently? Right now you add print statements. Or you install LangSmith and spend a day configuring it.
 
-`llm-ledger` gives you a decorator and a CLI. No cloud account. No config files. No framework lock-in.
+`infertrack` gives you a decorator and a CLI. No cloud account. No config files. No framework lock-in.
 
-|                        | llm-ledger | LangSmith | Helicone |
+|                        | infertrack | LangSmith | Helicone |
 |------------------------|:------------:|:---------:|:--------:|
 | pip install + done     | ✓            | ✗         | ✗        |
 | No cloud account       | ✓            | ✗         | ✗        |
@@ -58,7 +58,7 @@ You're building an LLM feature. You want to know: how many tokens did each call 
 ## Installation
 
 ```bash
-pip install llm-ledger          # core + CLI
+pip install infertrack          # core + CLI
 ```
 
 **Requires:** Python 3.10+, `click>=8.0`, `openai>=1.0` (optional, for OpenAI/Ollama)
@@ -83,7 +83,7 @@ client = OpenAI(base_url="http://localhost:11434/v1", api_key="ollama")
 Wrap any function that returns a raw API response object:
 
 ```python
-from llm_ledger import watchdog
+from infertrack import watchdog
 from openai import OpenAI
 
 client = OpenAI(base_url="http://localhost:11434/v1", api_key="ollama")
@@ -97,7 +97,7 @@ def ask(prompt: str):
 
 response = ask("What is the capital of France?")
 print(response.choices[0].message.content)
-# Every call is now logged to ~/.llm-ledger/logs.db
+# Every call is now logged to ~/.infertrack/logs.db
 ```
 
 Parameters:
@@ -116,7 +116,7 @@ Parameters:
 Track one or more API calls in a block and read live metrics afterward:
 
 ```python
-from llm_ledger import watch
+from infertrack import watch
 
 with watch(tag="batch-summarise", user_id="alice") as w:
     for doc in documents:
@@ -139,7 +139,7 @@ print(f"Calls: {w.call_count}")
 Stop a runaway loop before it empties your wallet:
 
 ```python
-from llm_ledger import Budget, BudgetExceeded
+from infertrack import Budget, BudgetExceeded
 
 try:
     with Budget(max_usd=0.10, user_id="alice") as b:
@@ -176,7 +176,7 @@ async def generate(prompt: str, user_id: str):
 
 ### CLI
 
-All commands read from `~/.llm-ledger/logs.db` by default. Override with `--db /path/to/logs.db`.
+All commands read from `~/.infertrack/logs.db` by default. Override with `--db /path/to/logs.db`.
 
 #### `watchdog summary`
 
@@ -211,7 +211,7 @@ watchdog top --limit 5 --last 7d          # top 5 in last 7 days
 
 ## Storage
 
-All data is stored locally in `~/.llm-ledger/logs.db` (SQLite). No data ever leaves your machine.
+All data is stored locally in `~/.infertrack/logs.db` (SQLite). No data ever leaves your machine.
 
 Override the path with the `--db` flag on any CLI command, or pass `db_path=` to any decorator/context manager.
 
@@ -249,7 +249,7 @@ Unknown models default to $0.00 cost and are still tracked for tokens and latenc
 
 ---
 
-## What llm-ledger does NOT do
+## What infertrack does NOT do
 
 - **No prompt storage** — the content of your messages is never logged
 - **No cloud sync** — all data stays in your local SQLite file
@@ -265,7 +265,7 @@ Unknown models default to $0.00 cost and are still tracked for tokens and latenc
 - [x] `watch()` context manager
 - [x] `Budget()` enforcement
 - [x] CLI: `summary`, `tail`, `top`
-- [ ] `llm_ledger.intercept()` — zero-code-change global monkey-patch (Day 7)
+- [ ] `infertrack.intercept()` — zero-code-change global monkey-patch (Day 7)
 - [ ] Anthropic provider (Day 8)
 - [ ] `watchdog export --format csv/json` (Day 9)
 - [ ] Streaming response support (Day 10)
@@ -275,8 +275,8 @@ Unknown models default to $0.00 cost and are still tracked for tokens and latenc
 ## Development
 
 ```bash
-git clone https://github.com/yourname/llm-ledger
-cd llm-ledger
+git clone https://github.com/yourname/infertrack
+cd infertrack
 python -m venv .venv && source .venv/bin/activate
 pip install -e ".[dev]"
 

@@ -1,4 +1,4 @@
-# src/llm_ledger/cli/commands.py
+# src/infertrack/cli/commands.py
 from __future__ import annotations
 
 import sqlite3
@@ -8,14 +8,14 @@ from typing import Optional
 
 import click
 
-from llm_ledger.storage.db import (
+from infertrack.storage.db import (
     DEFAULT_DB_PATH,
     init_db,
     query_logs,
     get_total_cost,
     _connect,
 )
-from llm_ledger.storage.models import CallLog
+from infertrack.storage.models import CallLog
 
 
 # Helpers                                                              

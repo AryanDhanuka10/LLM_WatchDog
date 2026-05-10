@@ -1,4 +1,4 @@
-# src/llm_ledger/storage/models.py
+# src/infertrack/storage/models.py
 from __future__ import annotations
 
 from dataclasses import dataclass, field

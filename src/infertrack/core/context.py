@@ -1,4 +1,4 @@
-# src/llm_ledger/core/context.py
+# src/infertrack/core/context.py
 from __future__ import annotations
 
 import time
@@ -7,11 +7,11 @@ from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any, Generator, Optional
 
-from llm_ledger.providers.openai import OpenAIProvider
-from llm_ledger.providers.anthropic import AnthropicProvider
-from llm_ledger.pricing.table import calculate_cost
-from llm_ledger.storage.models import CallLog
-from llm_ledger.storage.db import insert_log, init_db, DEFAULT_DB_PATH
+from infertrack.providers.openai import OpenAIProvider
+from infertrack.providers.anthropic import AnthropicProvider
+from infertrack.pricing.table import calculate_cost
+from infertrack.storage.models import CallLog
+from infertrack.storage.db import insert_log, init_db, DEFAULT_DB_PATH
 
 # Same provider registry as decorator — kept in sync manually until Day 8
 _PROVIDERS = [

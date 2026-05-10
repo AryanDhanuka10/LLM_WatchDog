@@ -18,7 +18,7 @@ import pytest
 from pathlib import Path
 from unittest.mock import MagicMock, patch
 
-from llm_ledger.storage.db import init_db, query_logs
+from infertrack.storage.db import init_db, query_logs
 
 
 # Fixtures                                                             
@@ -44,28 +44,28 @@ def make_response(model="qwen2.5:0.5b", prompt_tokens=10, completion_tokens=20):
 class TestExceptionMessages:
 
     def test_provider_not_detected_str(self):
-        from llm_ledger.exceptions import ProviderNotDetected
+        from infertrack.exceptions import ProviderNotDetected
         err = ProviderNotDetected("dict")
         assert "dict" in str(err)
         assert err.response_type == "dict"
 
     def test_provider_not_detected_default(self):
-        from llm_ledger.exceptions import ProviderNotDetected
+        from infertrack.exceptions import ProviderNotDetected
         err = ProviderNotDetected()
         assert "unknown" in str(err)
 
     def test_pricing_model_not_found_str(self):
-        from llm_ledger.exceptions import PricingModelNotFound
+        from infertrack.exceptions import PricingModelNotFound
         err = PricingModelNotFound("gpt-99-ultra")
         assert "gpt-99-ultra" in str(err)
         assert err.model == "gpt-99-ultra"
 
     def test_pricing_model_not_found_is_watchdog_error(self):
-        from llm_ledger.exceptions import PricingModelNotFound, WatchdogError
+        from infertrack.exceptions import PricingModelNotFound, WatchdogError
         assert isinstance(PricingModelNotFound("x"), WatchdogError)
 
     def test_provider_not_detected_is_watchdog_error(self):
-        from llm_ledger.exceptions import ProviderNotDetected, WatchdogError
+        from infertrack.exceptions import ProviderNotDetected, WatchdogError
         assert isinstance(ProviderNotDetected(), WatchdogError)
 
 
@@ -98,7 +98,7 @@ def _ensure_fake_openai():
 FakeCompletions = _ensure_fake_openai()
 _original_create = FakeCompletions.create
 
-import llm_ledger.core.interceptor as imod
+import infertrack.core.interceptor as imod
 
 
 @pytest.fixture(autouse=True)
@@ -117,7 +117,7 @@ class TestInterceptorUncoveredPaths:
 
     def test_parse_failure_in_wrapper_logs_unknown(self, tmp_db):
         """Provider detected but extract_usage raises → logs provider=unknown."""
-        from llm_ledger.core.interceptor import intercept, _make_wrapper
+        from infertrack.core.interceptor import intercept, _make_wrapper
 
         # Response that passes detect() but fails extract_usage()
         bad_resp = MagicMock()
@@ -201,7 +201,7 @@ class TestContextAddResponseParseFail:
 
     def test_unknown_response_logged_with_error(self, tmp_db):
         """add_response with unrecognised object logs provider=unknown."""
-        from llm_ledger.core.context import watch
+        from infertrack.core.context import watch
 
         with watch(db_path=tmp_db) as w:
             w.add_response({"not": "a response"}, db_path=tmp_db)
@@ -212,7 +212,7 @@ class TestContextAddResponseParseFail:
 
     def test_none_response_handled_gracefully(self, tmp_db):
         """add_response(None) must not raise."""
-        from llm_ledger.core.context import watch
+        from infertrack.core.context import watch
 
         with watch(db_path=tmp_db) as w:
             w.add_response(None, db_path=tmp_db)
@@ -225,23 +225,23 @@ class TestContextAddResponseParseFail:
 class TestParseTimestampEdgeCases:
 
     def test_integer_epoch_parsed(self):
-        from llm_ledger.storage.db import _parse_timestamp
+        from infertrack.storage.db import _parse_timestamp
         from datetime import datetime
         ts = _parse_timestamp(1700000000)
         assert isinstance(ts, datetime)
 
     def test_invalid_string_raises(self):
-        from llm_ledger.storage.db import _parse_timestamp
+        from infertrack.storage.db import _parse_timestamp
         with pytest.raises(ValueError, match="Cannot parse"):
             _parse_timestamp("not-a-date-or-number")
 
     def test_iso_string_with_timezone(self):
-        from llm_ledger.storage.db import _parse_timestamp
+        from infertrack.storage.db import _parse_timestamp
         ts = _parse_timestamp("2026-05-07T10:30:00+00:00")
         assert ts.year == 2026
 
     def test_datetime_passthrough(self):
-        from llm_ledger.storage.db import _parse_timestamp
+        from infertrack.storage.db import _parse_timestamp
         from datetime import datetime, timezone
         dt = datetime.now(timezone.utc)
         assert _parse_timestamp(dt) is dt
@@ -252,7 +252,7 @@ class TestParseTimestampEdgeCases:
 class TestBudgetDetectAndCost:
 
     def test_unrecognised_response_returns_zeros(self):
-        from llm_ledger.core.budget import _detect_and_cost
+        from infertrack.core.budget import _detect_and_cost
         prov, model, inp, out, cost = _detect_and_cost({"not": "a response"})
         assert prov  == "unknown"
         assert model == "unknown"
@@ -261,12 +261,12 @@ class TestBudgetDetectAndCost:
         assert cost  == 0.0
 
     def test_none_response_returns_zeros(self):
-        from llm_ledger.core.budget import _detect_and_cost
+        from infertrack.core.budget import _detect_and_cost
         prov, model, inp, out, cost = _detect_and_cost(None)
         assert cost == 0.0
 
     def test_valid_response_returns_values(self):
-        from llm_ledger.core.budget import _detect_and_cost
+        from infertrack.core.budget import _detect_and_cost
         resp = make_response(model="gpt-4o",
                              prompt_tokens=1000, completion_tokens=500)
         prov, model, inp, out, cost = _detect_and_cost(resp)
@@ -282,7 +282,7 @@ class TestBudgetDetectAndCost:
 class TestComputeDelayUnknownBackoff:
 
     def test_unknown_backoff_raises(self):
-        from llm_ledger.core.retry import _compute_delay
+        from infertrack.core.retry import _compute_delay
         with pytest.raises(ValueError, match="Unknown backoff"):
             _compute_delay(0, "zigzag", 1.0, 60.0)
 
@@ -292,13 +292,13 @@ class TestComputeDelayUnknownBackoff:
 class TestSinceDatetimeBadInput:
 
     def test_invalid_last_raises_bad_parameter(self):
-        from llm_ledger.cli.commands import _since_datetime
+        from infertrack.cli.commands import _since_datetime
         import click
         with pytest.raises(click.BadParameter):
             _since_datetime("yesterday")
 
     def test_all_returns_none(self):
-        from llm_ledger.cli.commands import _since_datetime
+        from infertrack.cli.commands import _since_datetime
         assert _since_datetime("all") is None
 
 
@@ -307,5 +307,5 @@ class TestSinceDatetimeBadInput:
 class TestCLIMainBlock:
 
     def test_cli_importable_as_module(self):
-        from llm_ledger.cli.__main__ import cli
+        from infertrack.cli.__main__ import cli
         assert callable(cli)

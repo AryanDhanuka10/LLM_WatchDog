@@ -9,8 +9,8 @@ import pytest
 from pathlib import Path
 from unittest.mock import MagicMock
 
-from llm_ledger.core.context import watch, WatchContext
-from llm_ledger.storage.db import init_db, query_logs
+from infertrack.core.context import watch, WatchContext
+from infertrack.storage.db import init_db, query_logs
 
 
 # Fixtures                                                             
