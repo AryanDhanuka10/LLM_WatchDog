@@ -41,9 +41,10 @@ dev = [
 watchdog = "infertrack.cli.__main__:cli"
 
 [project.urls]
-Repository = "https://github.com/AryanDhanuka10/InferTrack"
+Repository    = "https://github.com/AryanDhanuka10/InferTrack"
 "Bug Tracker" = "https://github.com/AryanDhanuka10/InferTrack/issues"
-Changelog = "https://github.com/AryanDhanuka10/InferTrack/blob/main/CHANGELOG.md"
+Changelog     = "https://github.com/AryanDhanuka10/InferTrack/blob/main/CHANGELOG.md"
+Documentation = "https://github.com/AryanDhanuka10/InferTrack#readme"
 
 [tool.hatch.build.targets.wheel]
 packages = ["src/infertrack"]
