@@ -294,4 +294,4 @@ ruff check src/
 
 ## License
 
-MIT
+Apache
