@@ -7,7 +7,7 @@ Versioning follows [Semantic Versioning](https://semver.org/).
 
 ---
 
-## [1.0.0] - 2026-05-10
+## [1.0.1] - 2026-05-10
 
 ### Added
 - `core/streaming.py` — `StreamingWrapper` passthrough generator for `stream=True` calls
