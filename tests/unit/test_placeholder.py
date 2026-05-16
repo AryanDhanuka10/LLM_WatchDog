@@ -5,7 +5,7 @@ This file just verifies the package is importable before Day 1.
 
 def test_package_importable():
     import infertrack
-    assert infertrack.__version__ == "1.0.0"
+    assert infertrack.__version__ == "1.0.3"
 
 def test_config_importable():
     from infertrack.config import config, configure, reset_config
