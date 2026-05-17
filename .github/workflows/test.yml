@@ -37,7 +37,6 @@ jobs:
             --cov-report=term-missing \
             --cov-fail-under=80 \
             -v \
-            -m "not integration"
 
       - name: Upload coverage report
         if: matrix.python-version == '3.11'
