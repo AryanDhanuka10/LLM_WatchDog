@@ -6,28 +6,56 @@ All tests in this folder require Ollama running at http://localhost:11434
 Setup:
     ollama serve                  # start Ollama daemon
     ollama pull qwen2.5:0.5b     # pull smallest/fastest model
-    pytest tests/integration/ -v -m integration
+    pytest tests/integration/ -v
 """
 from __future__ import annotations
 
 import pytest
 from pathlib import Path
 from openai import OpenAI
-from unittest.mock import MagicMock
 
 
-@pytest.fixture
-def mock_openai_response():
-    """Mimics openai.types.chat.ChatCompletion structure."""
-    response = MagicMock()
-    response.model = "qwen2.5:0.5b"
-    response.usage.prompt_tokens = 10
-    response.usage.completion_tokens = 20
-    response.choices[0].message.content = "Hello"
-    return response
+# Ollama availability — checked once, skips only integration tests     
+
+def _ollama_is_running() -> bool:
+    """Return True if Ollama is reachable at localhost:11434."""
+    try:
+        import httpx
+        r = httpx.get("http://localhost:11434/api/tags", timeout=3)
+        r.raise_for_status()
+        return True
+    except Exception:
+        return False
 
 
-# Ollama client fixture                                                
+def pytest_collection_modifyitems(config, items):
+    """Skip all integration-marked tests if Ollama is not running.
+
+    This hook runs AFTER collection and only skips tests marked
+    'integration' — unit tests are never affected.
+    """
+    if _ollama_is_running():
+        return   # Ollama is up, run everything
+
+    skip_reason = pytest.mark.skip(
+        reason="Ollama not running at http://localhost:11434. "
+               "Start with: ollama serve && ollama pull qwen2.5:0.5b"
+    )
+    for item in items:
+        if "integration" in item.keywords:
+            item.add_marker(skip_reason)
+
+
+# Markers                                                              
+
+def pytest_configure(config):
+    config.addinivalue_line(
+        "markers",
+        "integration: marks tests that require Ollama running locally"
+    )
+
+
+# Fixtures                                                             
 
 @pytest.fixture(scope="session")
 def ollama_client():
@@ -48,26 +76,3 @@ def tmp_db(tmp_path: Path) -> Path:
     db = tmp_path / "integration_test.db"
     init_db(db)
     return db
-
-
-# Ollama availability check                                            
-
-def pytest_configure(config):
-    config.addinivalue_line(
-        "markers",
-        "integration: marks tests that require Ollama running locally"
-    )
-
-
-@pytest.fixture(scope="session", autouse=True)
-def check_ollama():
-    """Skip entire integration suite if Ollama is not reachable."""
-    import httpx
-    try:
-        r = httpx.get("http://localhost:11434/api/tags", timeout=3)
-        r.raise_for_status()
-    except Exception:
-        pytest.skip(
-            "Ollama not running at http://localhost:11434. "
-            "Start it with: ollama serve"
-        )
